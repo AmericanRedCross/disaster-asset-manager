@@ -1,39 +1,11 @@
 module.exports = {
-	siteName: "Disaster Asset Manager",
-	description: "Use this site to manage and maintain map assets for relief responses.",
-	db: "arc_assets",
+	siteName: "Document Manager",
+	description: "Use this site to manage and maintain documents for the Tindog Tabang Leytenas (TTL) programs.",
+	db: "ttl_documents",
 	port: 8888,
 	asset_opts: {
-		extents: [
-			"Arghakhanchi",	"Bagmati",	"Bara",	"Bhaktapur",	"Chitawan",	"Dhading",	"Dhanusa",	"Dhaualagiri",	"Dolakha",	"Gandaki",	"Ghorkha",	"Gulmi",	"Janakpur",	"Kapilbastu",	"Kaski",	"Kathmandu",	"Kavrepalanchok",	"Koshi",	"Lalitpur",	"Lamjung",	"Lumbini",	"Mahottari",	"Makwanpur",	"Manang",	"Mechi",	"Narayani",	"Nawalparasi",	"Nepal",	"Nuwakot",	"Okhaldhunga",	"Palpa",	"Parsa",	"Ramechhap",	"Rapti",	"Rasuwa",	"Rautahat",	"Rupandehi",	"Sagarmatha",	"Sarlahi",	"Sindhuli",	"Sindhupalchok",	"Syangja",	"Tanahu",	"World"
-		],
-		sectors: [
-			"3W",
-			"Accessibility",
-			"Admin-boundaries",
-			"Affected",
-			"Allocation",
-			"AmericanRedCross",
-			"Atlas-map",
-			"Baseline",
-			"Coordination",
-			"Damage",
-			"Distributions",
-			"Earthquake",
-			"Health",
-			"Hillshade",
-			"Hubs",
-			"IDP-Camps",
-			"IRA",
-			"Logistics",
-			"NRCS",
-			"Population",
-			"Priority",
-			"RedCrossRedCrescent",
-			"Roads",
-			"Shelter",
-			"VDC",
-			"Web-map"
+		tags: [
+			"tag1",	"tag2",	"tag3",	"tag4"
 		]
 	}
 }

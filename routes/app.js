@@ -53,17 +53,10 @@ var assetSchema = new Schema({
   file: String,
   file_mime: String,
   file_ids: Array,
-  thumbnail: String,
-  thumbnail_mime: String,
-  thumbnail_ids: Array,
-  map_size:	Number,
-  extent: {type: Array, required:true},
-  sector: {type: Array, required:true},
-  longitude: Number,
-  latitude: Number,
-  link: String,
+  doc_size: Number,
+	tags: {type: Array, required:true},
   user: {type: String, required:true},
-  public: {type: Boolean, required:true, default: false},
+  public: {type: Boolean, required:true, default: true},
   type: {type: String, required:true, default: "map"}
 },{
 	collection:'assets'
@@ -108,7 +101,7 @@ function Ctrl(host, port) {
 					var defaultUser = new User();
 					defaultUser.email = "defaultUser@redcross.org";
 					defaultUser.permissions = "super";
-					defaultUser.password = defaultUser.generateHash("pa$$w0rd");	
+					defaultUser.password = defaultUser.generateHash("pa$$w0rd");
 					defaultUser.save(function(err) {
 		                if (err) {
 		                	console.error("Could not create default super user");
@@ -117,11 +110,11 @@ function Ctrl(host, port) {
 				}
 			});
 		})
-		
+
 		mongoose.connect('mongodb://localhost/'+localConfig.db);
 	    var Grid = require('gridfs-stream');
 	    Grid.mongo = mongoose.mongo;
-	 
+
 	    that.gfs = Grid(db);
 	})
 }
@@ -141,9 +134,9 @@ Ctrl.prototype.createAsset = function(req,res) {
 			var newAsset = new Asset();
 			for (key in req.body) {
 				newAsset[key] = req.body[key];
-			}	
+			}
 			newAsset.user = req.user.email;
-			
+
 		    ctrl.handleAssetFiles(req,res,newAsset,'createMessage','Unable to create a new asset at this time.');
        	}
    	})
@@ -155,7 +148,7 @@ Ctrl.prototype.updateAsset = function(req,res,opts) {
 		if (err) { req.flash('editMessage', 'Unable to edit that asset at this time.'); };
 		if (asset) {
 			for (key in req.body) {
-				if (key == "sector" || key == "extent") {
+				if (key == "tags") {
 					if (typeof req.body[key] != "object") {
 						req.body[key] = [req.body[key]];
 					}
@@ -213,12 +206,12 @@ Ctrl.prototype.handleAssetFiles = function(req,res,asset,flashType,flashMsg) {
 						})
 					}
 				})
-			}	
+			}
 		} else {
 			ctrl.handleFile(asset,key,file,requests,function() {
 				requests.active--;
 				!requests.active && (complete());
-			});			
+			});
 		}
 	}
 	!requests.active && complete();
@@ -231,7 +224,8 @@ Ctrl.prototype.handleFile = function(asset,key,file,requests,callback) {
 	asset[key] = filename;
 	asset[key+"_mime"] = file.mimetype;
 	asset[key+"_ids"] = [];
-	asset.map_size = file.size;
+	asset.doc_size = file.size;
+	console.log(file.size);
 	requests.active++;
 	(function(file) {
 		var ws = ctrl.gfs.createWriteStream({
@@ -239,78 +233,10 @@ Ctrl.prototype.handleFile = function(asset,key,file,requests,callback) {
 	    });
 	    ws.on("close",function(writeFile) {
 	    	asset[key+"_ids"].push(writeFile._id);
-	    	if (key == "file" && file.extension == "pdf") {
-				var pdfImage = new PDFImage(file.path);
-				pdfImage.convertPage(0).then(function (imagePath) {
-					var filename = imagePath.replace("/tmp/","");
-					asset.thumbnail = filename;
-					asset.thumbnail_mime = "image/png";
-					if (asset.thumbnail_ids && asset.thumbnail_ids.length) {
-						for (var i=0;i<asset.thumbnail_ids.length;i++) {
-							var id = asset.thumbnail_ids[i]
-							requests.active++;
-							ctrl.gfs.remove({"_id":id},function(err,result) {
-								requests.active--;
-								if (requests.active == 1) {
-									ctrl.createThumbnails(asset,requests,imagePath,function() {
-										callback();
-									})
-								}
-							})
-						}
-					} else {
-						ctrl.createThumbnails(asset,requests,imagePath,function() {
-							callback();
-						})
-					}
-				})
-			} else {
 				callback();
-			}
 	    })
 		read_stream.pipe(ws);
    })(file);
-}
-
-Ctrl.prototype.createThumbnails = function(asset,requests,imagePath,callback) {
-	var ctrl = this;
-	asset.thumbnail_ids = [];
-	requests.active++;
-	gm(imagePath).resize(500).stream(function (err,stdout,stderr) {
-		var ws = ctrl.gfs.createWriteStream({
-			filename:asset.thumbnail
-		});
-		ws.on("close",function(writeFile) {
-			asset.thumbnail_ids.push(writeFile._id);
-			requests.active--;
-			(requests.active == 1) && (callback());
-		})
-		stdout.pipe(ws);
-	});
-	requests.active++;
-	gm(imagePath).resize(250).stream(function (err,stdout,stderr) {
-		var ws = ctrl.gfs.createWriteStream({
-			filename:"md_"+asset.thumbnail
-		});
-		ws.on("close",function(writeFile) {
-			asset.thumbnail_ids.push(writeFile._id);
-			requests.active--;
-			(requests.active == 1) && (callback());
-		})
-		stdout.pipe(ws);
-	});
-	requests.active++;
-	gm(imagePath).resize(100).stream(function (err,stdout,stderr) {
-		var ws = ctrl.gfs.createWriteStream({
-			filename:"sm_"+asset.thumbnail
-		});
-		ws.on("close",function(writeFile) {
-			asset.thumbnail_ids.push(writeFile._id);
-			requests.active--;
-			(requests.active == 1) && (callback());
-		})
-		stdout.pipe(ws);
-	});
 }
 
 Ctrl.prototype.getAssets = function(user,query,callback) {
@@ -365,7 +291,7 @@ Ctrl.prototype.getAsset = function(user,id,callback) {
 		query.user = user.email;
 	}
 	Asset.findOne(query, function(err, asset) {
-		if (!err && asset) { 
+		if (!err && asset) {
 			callback(asset);
 		} else {
 			callback(undefined);
@@ -376,7 +302,7 @@ Ctrl.prototype.getAsset = function(user,id,callback) {
 Ctrl.prototype.getAssetFile = function(user,id,callback,req,res) {
 	var ctrl = this;
 	Asset.findOne({_id:id}, function(err, asset) {
-		if (!err) { 
+		if (!err) {
 			ctrl.gfs.files.find({filename:asset.file}).toArray(function(err,files) {
 				if (!err && files.length > 0) {
 					res.set('Content-Type', asset.file_mime);
@@ -393,46 +319,6 @@ Ctrl.prototype.getAssetFile = function(user,id,callback,req,res) {
    	})
 }
 
-Ctrl.prototype.getAssetThumb = function(user,id,size,callback,req,res) {
-	var ctrl = this;
-	Asset.findOne({_id:id}, function(err, asset) {
-		if (!err) { 
-			var filename = asset.thumbnail;
-			switch (size) {
-				case "med":
-				case "medium":
-				case "md":
-				case "m":
-					filename = "med_"+filename;
-				break;
-				case "sm":
-				case "small":
-				case "s":
-					filename = "sm_"+filename;
-				break;
-				case "":
-				case undefined:
-				case "large":
-				case "lg":
-				case "l":
-				default:
-					filename = filename;
-				break;
-			}
-			ctrl.gfs.files.find({filename:asset.thumbnail}).toArray(function(err,files) {
-				if (!err && files.length > 0) {
-					res.set('Content-Type', asset.thumbnail_mime);
-		            var read_stream = ctrl.gfs.createReadStream({filename: filename});
-		            read_stream.pipe(res);
-				} else {
-					callback();
-				}
-			})
-		} else {
-			callback();
-		}
-   	})
-}
 
 Ctrl.prototype.createUser = function(req,res) {
 	 User.findOne({ 'email' :  req.body.email }, function(err, user) {
@@ -444,7 +330,7 @@ Ctrl.prototype.createUser = function(req,res) {
 			var newUser = new User();
 			newUser.email = req.body.email;
 			newUser.permissions = req.body.permissions;
-			newUser.password = newUser.generateHash(req.body.password);	
+			newUser.password = newUser.generateHash(req.body.password);
 			newUser.save(function(err) {
                 if (err) {
                 	req.flash('createMessage', 'Unable to save a new user account at this time.');
@@ -461,7 +347,7 @@ Ctrl.prototype.updateUser = function(req,res) {
 		if (user) {
 			user.permissions = req.body.permissions;
 			if (req.body.password && req.body.password.length > 0) {
-				user.password = user.generateHash(req.body.password);	
+				user.password = user.generateHash(req.body.password);
 			}
 			user.save(function(err) {
                 if (err) {
@@ -512,7 +398,7 @@ Ctrl.prototype.getUsers = function(callback) {
 
 Ctrl.prototype.getUser = function(email,callback) {
 	User.findOne({email:email}, function(err, user) {
-		if (!err && user) { 
+		if (!err && user) {
 			callback(user);
 		} else {
 			callback(undefined);
@@ -524,5 +410,3 @@ Ctrl.prototype.getUser = function(email,callback) {
 exports.Ctrl = Ctrl;
 exports.Asset = Asset;
 exports.User = User;
-
-

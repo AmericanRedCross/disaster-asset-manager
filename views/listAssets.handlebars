@@ -33,8 +33,7 @@
 					<th>Date</th>
 					<th>Title</th>
 					<th>Creator</th>
-					<th>Sector(s)</th>
-					<th>Extent(s)</th>
+					<th>Tag(s)</th>
 					<th class="btn-col"></th>
 				</tr>
 			</thead>
@@ -44,8 +43,7 @@
 					<td>{{formatDate date 'MM/DD/YYYY'}}</td>
 					<td>{{title}}</td>
 					<td>{{user}}</td>
-					<td>{{#each sector}}{{this}}{{#if @last}}{{else}}, {{/if}}{{/each}}</td>
-					<td>{{#each extent}}{{this}}{{#if @last}}{{else}}, {{/if}}{{/each}}</td>
+					<td>{{#each tags}}{{this}}{{#if @last}}{{else}}, {{/if}}{{/each}}</td>
 					<td>
 						<div class="btn-group">
 							<button class="btn btn-warning sharp edit-toggle" title="Edit Asset" data-toggle="modal" data-target="#edit-asset-modal" rel="{{_id}}"><b class="glyphicon glyphicon-edit"></b></button></a>
@@ -86,8 +84,8 @@
 					</div>
 					<form action="/asset" method="POST" id="edit-asset" enctype="multipart/form-data" >
 						<input type="hidden" name="_method" value="PUT">
-						<div class="modal-body">	
-						</div>		
+						<div class="modal-body">
+						</div>
 						<div class="modal-footer">
 							<div class="btn-group">
 								<button class="btn btn-success sharp">Save</button>
@@ -105,8 +103,8 @@
 						<h4 class="modal-title">Create Asset</h4>
 					</div>
 					<form action="/asset" method="POST" id="add-asset" enctype="multipart/form-data" >
-						<div class="modal-body">	
-						</div>		
+						<div class="modal-body">
+						</div>
 						<div class="modal-footer">
 							<div class="btn-group">
 								<button class="btn btn-success sharp">Create</button>

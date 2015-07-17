@@ -21,31 +21,17 @@
 </fieldset>
 <fieldset>
 	<legend>Attributes</legend>
-	<div class="form-group">
-		<div class="checkbox">
-			<label><input type="checkbox" name="public" id="public" value="true" {{#if public}}checked{{/if}}> Public</label>
-		</div>
-	</div>
+
 	<div class="form-group">
 		<div class="radio">
-			<label><input type="radio" name="type" id="type_sitrep" value="sitrep" {{#eq type "sitrep"}}checked{{/eq}} required> Situation Report</label>
+			<label><input type="radio" name="type" id="type_report" value="report" {{#eq type "report"}}checked{{/eq}} required> Report</label>
 		</div>
 		<div class="radio">
-			<label><input type="radio" name="type" id="type_map" value="map" {{#eq type "map"}}checked{{/eq}}> Map</label>
+			<label><input type="radio" name="type" id="type_training" value="training" {{#eq type "training"}}checked{{/eq}}> Training material</label>
 		</div>
 	</div>
 </fieldset>
-<fieldset>
-	<legend>Geo Data</legend>
-	<div class="form-group">
-		<label for="longitude">Longitude</label>
-		<input type="number" class="form-control" name="longitude" id="longitude" value="{{longitude}}">
-	</div>
-	<div class="form-group">
-		<label for="latitude">Latitude</label>
-		<input type="number" class="form-control" name="latitude" id="latitude"  value="{{latitude}}">
-	</div>
-</fieldset>
+
 <!--<fieldset>
 	<legend>Thumbnail</legend>
 	<div class="form-group">
@@ -70,20 +56,15 @@
 		{{#if file}}<p>(<em>Current: {{file}}</em>)</p>{{/if}}
 		<input type="file" class="form-control" name="file" id="file" size="50">
 	</div>
-	<strong>or</strong>
-	<div class="form-group">
-		<label for="link">URL</label>
-		<input type="text" class="form-control" name="link" id="link" data-rule-url="true"  value="{{link}}">
-	</div>
 </fieldset>
 <fieldset>
 	<legend>Tags</legend>
 	<div class="form-group">
-		<label for="sector">Sector(s)</label>
-		<select class="form-control" id="sector" name="sector" required multiple>
-			{{#each opts.sectors}}
+		<!-- <label for="sector">Sector(s)</label> -->
+		<select class="form-control" id="tags" name="tags" required multiple>
+			{{#each opts.tags}}
 				<option value="{{this}}"
-				{{#each ../sector}}
+				{{#each ../tag}}
 					{{#eq this ../this}}
 						selected
 					{{/eq}}
@@ -91,8 +72,8 @@
 				>{{this}}</option>
 			{{/each}}
 		</select>
-	</div>	
-	<div class="form-group">
+	</div>
+	<!-- <div class="form-group">
 		<label for="extent">Extent(s)</label>
 		<select class="form-control" id="extent" name="extent" required multiple>
 			{{#each opts.extents}}
@@ -105,5 +86,5 @@
 				>{{this}}</option>
 			{{/each}}
 		</select>
-	</div>
-</fieldset>	
+	</div> -->
+</fieldset>
