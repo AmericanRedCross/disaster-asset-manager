@@ -78,13 +78,13 @@ app.engine('handlebars', exphbs({
 	defaultLayout: 'main',
 	helpers: {
 		eq: function(v1,v2,options) {
-			if (v1 && v2 && v1.toString() === v2.toString()) {  
+			if (v1 && v2 && v1.toString() === v2.toString()) {
 				return options.fn(this);
 			}
 			return options.inverse(this);
 		},
 		neq: function(v1,v2,options) {
-			if (v1 && v2 && v1.toString() !== v2.toString()) {  
+			if (v1 && v2 && v1.toString() !== v2.toString()) {
 				return options.fn(this);
 			}
 			return options.inverse(this);
@@ -126,13 +126,13 @@ app.engine('handlebars', exphbs({
 			var files = fs.readdirSync("client/media/logos");
 			for (var i=0;i<files.length;i++) {
 				var file = files[i];
-				output+="<img src='/media/logos/"+file+"' class='logo'>";
+				output+="<img src='media/logos/"+file+"' class='logo'>";
 			}
 			return output;
 		}
 	},
 	partials: {
-		
+
 	}
 }))
 app.set('view engine', 'handlebars');
@@ -141,11 +141,11 @@ app.use(express.static('client'));
 
 app.post('/user/logout',function(req,res) {
 	req.session.destroy(function() {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	})
 })
 
-app.post('/user/login',passport.authenticate('local-login', { 
+app.post('/user/login',passport.authenticate('local-login', {
     failureRedirect: '/',
     failureFlash: true
 }),function(req,res) {
@@ -153,7 +153,7 @@ app.post('/user/login',passport.authenticate('local-login', {
 		res.redirect(req.session.redirectTo);
 		delete req.session.redirectTo;
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -167,11 +167,11 @@ app.post('/user/:email',function(req,res) {
 				ctrl.updateUser(req,res);
 			break;
 			default:
-				res.redirect("/");
+				res.redirect(localConfig.nginxlocation);
 			break;
 		}
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -179,7 +179,7 @@ app.post('/user',function(req,res) {
 	if (req.user && req.user.permissions == "super") {
 		ctrl.createUser(req,res);
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -196,8 +196,8 @@ app.get('/users',function(req,res) {
 			});
 		})
 	} else {
-		req.session.redirectTo = "/users";
-		res.redirect("/");
+		req.session.redirectTo = "users";
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -205,7 +205,7 @@ app.post('/users/import',function(req,res) {
 	if (req.user && req.user.permissions == "super") {
 		if (req.files && req.files.import) {
 			ctrl.importCSV(req,res,"user");
-		}		
+		}
 	} else {
 		res.status(401).send();
 	}
@@ -233,11 +233,11 @@ app.post('/asset/:id',function(req,res) {
 				ctrl.updateAsset(req,res,opts);
 			break;
 			default:
-				res.redirect("/");
+				res.redirect(localConfig.nginxlocation);
 			break;
-		} 
+		}
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -245,7 +245,7 @@ app.post('/asset',function(req,res) {
 	if (req.user) {
 		ctrl.createAsset(req,res);
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -253,9 +253,9 @@ app.post('/assets/import',function(req,res) {
 	if (req.user) {
 		if (req.files && req.files.import) {
 			ctrl.importCSV(req,res,"asset");
-		}		
+		}
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -263,7 +263,7 @@ app.get('/assets/export',function(req,res) {
 	if (req.user) {
 		ctrl.exportData(req,res,"asset");
 	} else {
-		res.redirect("/");
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -280,8 +280,8 @@ app.get('/assets',function(req,res) {
 			});
 		})
 	} else {
-		req.session.redirectTo = "/assets";
-		res.redirect("/");
+		req.session.redirectTo = "assets";
+		res.redirect(localConfig.nginxlocation);
 	}
 })
 
@@ -313,7 +313,7 @@ function apiSucceed(req,payload) {
 }
 
 function apiFail(err) {
-	return { 
+	return {
 		success: false,
 		error: err
 	}
@@ -334,7 +334,7 @@ app.post('/api/authenticate', function(req, res) {
     	} else {
     		res.status(401).json(apiFail("Invalid username and/or password."));
     	}
-    } else {    
+    } else {
 	    var token = JWT.encode({ iss: user.email, exp: moment().add('hours', 24).valueOf()}, app.get('tokenSecret'));
 	    if (req.query.from) {
 	    	res.redirect("http://"+req.query.from+"?token="+token);
@@ -349,10 +349,10 @@ app.get('/api/user/:email',[jwtauth.auth],function(req,res) {
 	res.header('Access-Control-Allow-Origin', '*');
 	if (req.user && (req.user.permissions == "super" || req.user.email == req.params.email)) {
 		ctrl.getUser(req.params.email,function(user) {
-			if (user) {				
+			if (user) {
 				res.json(apiSucceed(req,user));
 			} else {
-				res.status(400).json(apiFail("No user with that email address or insufficient access."))	
+				res.status(400).json(apiFail("No user with that email address or insufficient access."))
 			}
 		})
 	} else {
@@ -390,7 +390,7 @@ app.get('/api/asset/:id/thumbnail/:size',[jwtauth.auth],function(req,res) {
 })
 
 app.get('/api/asset/:id/thumbnail',[jwtauth.auth],function(req,res) {
-	res.redirect("/api/asset/"+req.params.id+"/thumbnail/500");
+	res.redirect("api/asset/"+req.params.id+"/thumbnail/500");
 })
 
 app.get('/api/asset/:id',[jwtauth.auth],function(req,res) {
@@ -412,8 +412,8 @@ app.get('/',function (req,res) {
 		opts:localConfig,
 		error:req.flash("loginMessage")
 	});
-})		
+})
 
- 
+
 app.listen(localConfig.port);
 console.log('Listening on port '+localConfig.port);

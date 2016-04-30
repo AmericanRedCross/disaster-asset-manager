@@ -1,4 +1,5 @@
 module.exports = {
+	nginxLocation: "/",
 	siteName: "Disaster Asset Manager",
 	description: "Use this site to manage and maintain map assets for relief responses.",
 	db: "arc_assets",
