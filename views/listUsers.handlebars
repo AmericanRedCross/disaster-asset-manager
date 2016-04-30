@@ -18,7 +18,7 @@
 		</li>
 		{{#eq user.permissions "super"}}
 			<li>
-				<a href="/users/export" target="_blank" id="export-toggle"><b class="glyphicon glyphicon-save"></b> Export Users</a>
+				<a href="users/export" target="_blank" id="export-toggle"><b class="glyphicon glyphicon-save"></b> Export Users</a>
 			</li>
 		{{/eq}}
 	</ul>
@@ -115,7 +115,7 @@
 					<div class="modal-header">
 						<h4 class="modal-title">Create User</h4>
 					</div>
-					<form action="/user" method="POST" id="add-user">
+					<form action="user" method="POST" id="add-user">
 						<div class="modal-body">
 						</div>
 						<div class="modal-footer">

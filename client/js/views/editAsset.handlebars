@@ -77,7 +77,7 @@
 	<strong>or</strong>-->
 	<div class="form-group{{#neq type "Web Map"}} active{{/neq}}{{#if type}}{{else}} active{{/if}}" id="form-file">
 		{{#if file}}<p><b>Current:</b> <em>{{#if filename}}{{filename}}{{else}}{{file}}{{/if}}</em></p>{{/if}}
-		{{#if thumbnail}}<p><img src="/api/asset/{{_id}}/thumbnail/200"></p>{{/if}}
+		{{#if thumbnail}}<p><img src="api/asset/{{_id}}/thumbnail/200"></p>{{/if}}
 		<label for="file">{{#if file}}Replace{{else}}Upload{{/if}} File</label>
 		<input type="file" class="form-control" name="file" id="file" size="50">
 	</div>
@@ -102,6 +102,6 @@
 					>{{this}}</option>
 				{{/each}}
 			</select>
-		</div>	
+		</div>
 	{{/each}}
-</fieldset>	
+</fieldset>

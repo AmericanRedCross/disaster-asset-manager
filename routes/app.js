@@ -116,7 +116,7 @@ function Ctrl(host, port) {
 					var defaultUser = new User();
 					defaultUser.email = "defaultUser@redcross.org";
 					defaultUser.permissions = "super";
-					defaultUser.password = defaultUser.generateHash("123");	
+					defaultUser.password = defaultUser.generateHash("123");
 					defaultUser.save(function(err) {
 		                if (err) {
 		                	console.error("Could not create default super user");
@@ -144,7 +144,7 @@ Ctrl.prototype.createAsset = function(req,res) {
 		if (err) { req.flash('createMessage', 'Unable to create a new asset at this time.'); };
 		if (asset) {
 		    req.flash('createMessage', 'There is already an asset with that name.');
-		    res.redirect("/assets");
+		    res.redirect("assets");
 		} else {
 			var newAsset = new Asset();
 			for (key in req.body) {
@@ -158,7 +158,7 @@ Ctrl.prototype.createAsset = function(req,res) {
 			        if (err) {
 			        	req.flash(flashType,flashMsg);
 			        }
-			        res.redirect("/assets");
+			        res.redirect("assets");
 			    })
 		    });
        	}
@@ -189,12 +189,12 @@ Ctrl.prototype.updateAsset = function(req,res,opts) {
 			        if (err) {
 			        	req.flash('editMessage','Unable to edit that asset at this time.');
 			        }
-			        res.redirect("/assets");
+			        res.redirect("assets");
 			    })
 		    });
 		} else {
 			req.flash('editMessage', 'There is no asset with that ID or you do not have permission to edit it.');
-		    res.redirect("/assets");
+		    res.redirect("assets");
        	}
    	})
 }
@@ -207,11 +207,11 @@ Ctrl.prototype.deleteAsset = function(req,res,opts) {
                 if (err) {
                 	req.flash('deleteMessage', 'Unable to delete that asset at this time.');
                 }
-                res.redirect("/assets");
+                res.redirect("assets");
             })
 		} else {
 			req.flash('deleteMessage', 'There is no asset with that ID or you do not have permission to delete it.');
-		    res.redirect("/assets");
+		    res.redirect("assets");
        	}
    	})
 }
@@ -475,7 +475,7 @@ Ctrl.prototype.createUser = function(req,res) {
 		if (err) { req.flash('createMessage', 'Unable to save a new user account at this time.'); };
 		if (user) {
 		    req.flash('createMessage', 'There is already an account associated with that email address.');
-		    res.redirect("/users");
+		    res.redirect("users");
 		} else {
 			var newUser = new User();
 			newUser.email = req.body.email;
@@ -485,7 +485,7 @@ Ctrl.prototype.createUser = function(req,res) {
                 if (err) {
                 	req.flash('createMessage', 'Unable to save a new user account at this time.');
                 }
-                res.redirect("/users");
+                res.redirect("users");
             })
        	}
    	})
@@ -503,11 +503,11 @@ Ctrl.prototype.updateUser = function(req,res) {
                 if (err) {
                 	req.flash('editMessage', 'Unable to edit that user account at this time.');
                 }
-                res.redirect("/users");
+                res.redirect("users");
             })
 		} else {
 			req.flash('editMessage', 'There is no user account associated with that email address.');
-		    res.redirect("/users");
+		    res.redirect("users");
        	}
    	})
 }
@@ -520,11 +520,11 @@ Ctrl.prototype.deleteUser = function(req,res) {
                 if (err) {
                 	req.flash('deleteMessage', 'Unable to delete that user account at this time.');
                 }
-                res.redirect("/users");
+                res.redirect("users");
             })
 		} else {
 			req.flash('deleteMessage', 'There is no user account associated with that email address.');
-		    res.redirect("/users");
+		    res.redirect("users");
        	}
    	})
 }
