@@ -36,7 +36,7 @@ $(function() {
 		$("#site-content").on("click",".edit-toggle",function() {
 			var email = $(this).attr("rel");
 			$("#edit-user").attr("action","user/"+email);
-			$.getJSON("/api/user/"+email,function(result) {
+			$.getJSON("api/user/"+email,function(result) {
 				result.response.edit = true;
 				$("#edit-user .modal-body").html(userCtrl.templates.editUser.tpl(result.response));
 				$("#edit-user").validate();
