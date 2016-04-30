@@ -141,19 +141,19 @@ app.use(express.static('client'));
 
 app.post('/user/logout',function(req,res) {
 	req.session.destroy(function() {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	})
 })
 
 app.post('/user/login',passport.authenticate('local-login', {
-    failureRedirect: localConfig.nginxlocation,
+    failureRedirect: localConfig.nginxLocation,
     failureFlash: true
 }),function(req,res) {
 	if (req.session.redirectTo) {
 		res.redirect(req.session.redirectTo);
 		delete req.session.redirectTo;
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -167,11 +167,11 @@ app.post('/user/:email',function(req,res) {
 				ctrl.updateUser(req,res);
 			break;
 			default:
-				res.redirect(localConfig.nginxlocation);
+				res.redirect(localConfig.nginxLocation);
 			break;
 		}
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -179,7 +179,7 @@ app.post('/user',function(req,res) {
 	if (req.user && req.user.permissions == "super") {
 		ctrl.createUser(req,res);
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -197,7 +197,7 @@ app.get('/users',function(req,res) {
 		})
 	} else {
 		req.session.redirectTo = "users";
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -233,11 +233,11 @@ app.post('/asset/:id',function(req,res) {
 				ctrl.updateAsset(req,res,opts);
 			break;
 			default:
-				res.redirect(localConfig.nginxlocation);
+				res.redirect(localConfig.nginxLocation);
 			break;
 		}
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -245,7 +245,7 @@ app.post('/asset',function(req,res) {
 	if (req.user) {
 		ctrl.createAsset(req,res);
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -255,7 +255,7 @@ app.post('/assets/import',function(req,res) {
 			ctrl.importCSV(req,res,"asset");
 		}
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -263,7 +263,7 @@ app.get('/assets/export',function(req,res) {
 	if (req.user) {
 		ctrl.exportData(req,res,"asset");
 	} else {
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
@@ -281,7 +281,7 @@ app.get('/assets',function(req,res) {
 		})
 	} else {
 		req.session.redirectTo = "assets";
-		res.redirect(localConfig.nginxlocation);
+		res.redirect(localConfig.nginxLocation);
 	}
 })
 
