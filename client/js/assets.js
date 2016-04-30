@@ -11,7 +11,7 @@ var assetCtrl = {
 		for (key in this.templates) {
 			(function(key) {
 				requests++;
-				$.get("/js/views/"+key+".handlebars",function(result) {
+				$.get("js/views/"+key+".handlebars",function(result) {
 					that.templates[key].tpl = Handlebars.compile(result);
 					requests--;
 					if (!requests) {
@@ -161,7 +161,7 @@ $(function() {
 		})
 		$("#site-content").on("click",".edit-toggle",function() {
 			var id = $(this).attr("rel");
-			$("#edit-asset").attr("action","/asset/"+id);
+			$("#edit-asset").attr("action","asset/"+id);
 			$.getJSON("/api/asset/"+id,function(result) {
 				result.response.opts = localConfig.asset_opts;
 				assetCtrl.model.asset = result.response;
@@ -175,7 +175,7 @@ $(function() {
 	})
 	assetCtrl.prepTemplates();
 	$(".delete-toggle").click(function() {
-		$("#delete-asset").attr("action","/asset/"+$(this).attr("rel"));
+		$("#delete-asset").attr("action","asset/"+$(this).attr("rel"));
 	})
 
 	$("table").DataTable({

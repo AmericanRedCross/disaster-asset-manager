@@ -24,7 +24,7 @@ Some modules have additional dependencies:
 On Ubuntu, run:
 
 ```console
-sudo apt-get imagemagick ghostscript poppler-utils
+sudo apt-get install imagemagick ghostscript poppler-utils
 ```
 
 For other systems, please refer to the documentation for individual dependencies.
@@ -36,12 +36,12 @@ For more information on installing and configuring libvips properly, visit the [
 * **siteName (string)**: The name of the site as it will be displayed to your users in the site header.
 * **description (string)**: The description of the site as it will be displayed to your users on the homepage.
 * **db (string)**: The name of the MongoDB database you will use for this application (will store users, assets, and asset files.) When you start the application for the first time, this database will be created if it doesn't already exist.
-* **port (integer)**: The port at which to run the application's public-facing server. If you do not have any other HTTP activity on your server, use port **80**. 
+* **port (integer)**: The port at which to run the application's public-facing server. If you do not have any other HTTP activity on your server, use port **80**.
 * **mapboxId (string)**: The project ID for the MapBox project you want to use to provide tiles for maps used for geolocation activities
 * **mapboxToken (string)**: The Mapbox public access token to use to provide tiles for maps used for geolocation activities
 * **asset_opts > geolocation (boolean)**: Whether or not to show the geolocation controls in order to assign longitude/latitude coordinates to assets
 * **asset_opts > types (array)**: The different document types that can be assigned to assets
-* **asset_opts > tags (object)**: Customized sets of tags that can be assigned to assets. Each set of tags has a name (the key) and two properties: 
+* **asset_opts > tags (object)**: Customized sets of tags that can be assigned to assets. Each set of tags has a name (the key) and two properties:
 	* **required (boolean)**: Whether or not the user is required to provide at least one tag in this set in order to save an asset
 	* **values (array)**: The text values for the tags in this set
 
@@ -103,7 +103,7 @@ pm2 start server.js
 
 **Restart the Asset Manager with your server**
 
-To have the Asset Manager restart itself after a reboot, server downtime, etc., you can generate a startup script. 
+To have the Asset Manager restart itself after a reboot, server downtime, etc., you can generate a startup script.
 
 Check the [PM2 documentation](https://github.com/Unitech/pm2#startup-script-generation) on this for more details.
 
@@ -113,11 +113,11 @@ The API methods provide access to the data in the asset manager in JSON format f
 
 ### Methods
 
-All methods are accessible via GET request. 
+All methods are accessible via GET request.
 
 Successful requests are responded to with the property **success: true** and a **response** property containing the data payload.
 
-Failed requests or requests that produce no data are responded to with the property **success: false** and a human readable error message. 
+Failed requests or requests that produce no data are responded to with the property **success: false** and a human readable error message.
 
 **/api/asset/[id]**
 
@@ -125,11 +125,11 @@ Returns the data for a single asset identified by its MongoDB ID. If an asset ca
 
 **/api/asset/[id]/file**
 
-Returns the file associated with a single asset identified by its MongoDB ID. Returns a file for download if successful, or a 404 response if the file cannot be found. 
+Returns the file associated with a single asset identified by its MongoDB ID. Returns a file for download if successful, or a 404 response if the file cannot be found.
 
 **/api/asset/[id]/thumbnail/[size]**
 
-Returns the thumbnail at any size, specified by a width in pixels, associated with a single asset identified by its MongoDB ID. Returns a file if successful, or a 404 response if the thumbnail cannot be found. 
+Returns the thumbnail at any size, specified by a width in pixels, associated with a single asset identified by its MongoDB ID. Returns a file if successful, or a 404 response if the thumbnail cannot be found.
 
 Notes on thumbnails:
 
@@ -139,32 +139,32 @@ Notes on thumbnails:
 
 **/api/assets**
 
-Returns the data for all public assets by default. If an access token is provided, additional assets will be included as appropriate. 
+Returns the data for all public assets by default. If an access token is provided, additional assets will be included as appropriate.
 
 Query parameters can also be included in the request, and results will be filtered to match these criteria. Parameters that do not match the asset schema will be ignored.
 
 **Note:** In order to filter on nested properties of objects, such as tags, use dot notation. For example:
 
 ```console
-/api/assets?tag.Sector=AmericanRedCross 
+/api/assets?tag.Sector=AmericanRedCross
 ```
 
 **Some More Examples**
 
 ```console
-/api/assets?type=sitrep 
+/api/assets?type=sitrep
 ```
 
-Limits the results to assets tagged as Situation Reports. 
+Limits the results to assets tagged as Situation Reports.
 
 ```console
-/api/assets?extent=World&extent=Nepal 
+/api/assets?extent=World&extent=Nepal
 ```
 
-Limits the results to assets tagged as relevant to the World **or** to Nepal. 
+Limits the results to assets tagged as relevant to the World **or** to Nepal.
 
 ```console
-/api/assets?foo=bar 
+/api/assets?foo=bar
 ```
 
 Does nothing.
@@ -175,7 +175,7 @@ All authentication methods use the authentication gateway at **/api/authenticate
 
 #### Pass-Through Method
 
-To enable users of a different site or application to authenticate for API requests, use the pass-through method. 
+To enable users of a different site or application to authenticate for API requests, use the pass-through method.
 
 Direct your users to the authentication gateway with your site's URL appended as the "from" value, like so:
 
@@ -185,7 +185,7 @@ http://www.myassetmanager.com:myport/api/authenticate?from=www.myotherapplicatio
 
 ***Note:*** *Do not use "http://" or "https://" in the "from" URL.*
 
-Once users provide their credentials, they will be redirected back to the URL you provided with a token parameter appended to the URL. 
+Once users provide their credentials, they will be redirected back to the URL you provided with a token parameter appended to the URL.
 
 ```console
 http://www.myotherapplication.com?token=12345.67890.12345
@@ -195,7 +195,7 @@ Use this token in your code to make API requests on behalf of the authenticated 
 
 #### AJAX Method
 
-To avoid having to direct users to the authentication gateway, you can also use the AJAX method to submit user credentials to the asset manager to get an access token. 
+To avoid having to direct users to the authentication gateway, you can also use the AJAX method to submit user credentials to the asset manager to get an access token.
 
 Send the user's **email** and **password** via a POST request to the authentication gateway at:
 
@@ -216,7 +216,7 @@ If the credentials are valid, you will receive a success response that looks lik
 
 #### Using the Access Token
 
-Regardless of which method you use, tokens are valid for 24 hours from issue. 
+Regardless of which method you use, tokens are valid for 24 hours from issue.
 
 To use an access token, append the token to your API requests in one of two ways:
 
@@ -234,7 +234,7 @@ x-access-token: 12345.67890.12345
 
 ## Customizing the Interface
 
-All local resources for the default Asset Manager interface are in the "client" directory. 
+All local resources for the default Asset Manager interface are in the "client" directory.
 
 **Templates**
 
@@ -244,7 +244,6 @@ Components of the interface that display data fetched via AJAX (right now, just 
 
 **Logos**
 
-A Handlebars helper displays the logos in the footer. It scrapes the "client/media/logos" directory for files and displays each as an image. 
+A Handlebars helper displays the logos in the footer. It scrapes the "client/media/logos" directory for files and displays each as an image.
 
-To modify these logos, simply add or remove files from that directory. 
-
+To modify these logos, simply add or remove files from that directory.
