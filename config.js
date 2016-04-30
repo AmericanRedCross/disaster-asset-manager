@@ -3,8 +3,11 @@ module.exports = {
 	description: "Use this site to manage and maintain map assets for relief responses.",
 	db: "arc_assets",
 	port: 8888,
-	mapboxId: "kevinlustig.n0dmkkj4",
-	mapboxToken: "pk.eyJ1Ijoia2V2aW5sdXN0aWciLCJhIjoiNDgzNDhhNzRhMzRhN2FlOGEzZDkzOWNkMDcyMDIzMzIifQ.2fQQqIf5HJsjHjMPsvNTOQ",
+	tileUrl: "http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+	tileAttribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles from <a href="http://hot.openstreetmap.org/" target="_blank">H.O.T.</a>',
+	defaultLat: -1.675,
+	defaultLng:-78.703,
+	defaultZoom: 5,
 	asset_opts: {
 		geolocation: true,
 		types: [
