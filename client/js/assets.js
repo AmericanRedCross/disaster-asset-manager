@@ -162,7 +162,7 @@ $(function() {
 		$("#site-content").on("click",".edit-toggle",function() {
 			var id = $(this).attr("rel");
 			$("#edit-asset").attr("action","asset/"+id);
-			$.getJSON("/api/asset/"+id,function(result) {
+			$.getJSON("api/asset/"+id,function(result) {
 				result.response.opts = localConfig.asset_opts;
 				assetCtrl.model.asset = result.response;
 				$("#edit-asset .modal-body").html(assetCtrl.templates.editAsset.tpl(assetCtrl.model.asset));
