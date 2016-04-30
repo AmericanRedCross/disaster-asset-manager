@@ -74,7 +74,7 @@ http://www.redcross.org:8888
 **Log in with the default super user**
 
 ```console
-defaultUser@redcross.org/pa$$w0rd
+defaultUser@redcross.org/123
 ```
 
 **Go to /users and create a new user**

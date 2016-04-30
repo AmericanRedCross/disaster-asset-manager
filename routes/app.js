@@ -116,7 +116,7 @@ function Ctrl(host, port) {
 					var defaultUser = new User();
 					defaultUser.email = "defaultUser@redcross.org";
 					defaultUser.permissions = "super";
-					defaultUser.password = defaultUser.generateHash("pa$$w0rd");	
+					defaultUser.password = defaultUser.generateHash("123");	
 					defaultUser.save(function(err) {
 		                if (err) {
 		                	console.error("Could not create default super user");
@@ -125,11 +125,11 @@ function Ctrl(host, port) {
 				}
 			});
 		})
-		
+
 		mongoose.connect('mongodb://localhost/'+localConfig.db);
 	    var Grid = require('gridfs-stream');
 	    Grid.mongo = mongoose.mongo;
-	 
+
 	    that.gfs = Grid(db);
 	})
 }
@@ -149,9 +149,9 @@ Ctrl.prototype.createAsset = function(req,res) {
 			var newAsset = new Asset();
 			for (key in req.body) {
 				newAsset[key] = req.body[key];
-			}	
+			}
 			newAsset.user = req.user.email;
-			
+
 		    ctrl.handleAssetFiles(req,res,newAsset,'createMessage','Unable to create a new asset at this time.',function() {
 		    	newAsset.save(function(err) {
 		    		console.log("Created Asset",newAsset);
@@ -237,7 +237,7 @@ Ctrl.prototype.handleAssetFiles = function(req,res,asset,flashType,flashMsg,comp
 		asset.thumbnail && (removeFile("thumbnail",function() {
 			!requests.active && (step(file));
 		}));
-		
+
 		if (asset.file) {
 			removeFile("file",function() {
 				!requests.active && (step(file));
@@ -339,7 +339,7 @@ Ctrl.prototype.getAsset = function(user,id,callback) {
 		query.user = user.email;
 	}
 	Asset.findOne(query, function(err, asset) {
-		if (!err && asset) { 
+		if (!err && asset) {
 			callback(asset);
 		} else {
 			callback(undefined);
@@ -356,7 +356,7 @@ Ctrl.prototype.getAssetFile = function(user,id,callback,req,res) {
 		query.user = user.email;
 	}
 	Asset.findOne(query, function(err, asset) {
-		if (!err && asset) { 
+		if (!err && asset) {
 			ctrl.gfs.files.findOne({_id:asset.file},function(err,file) {
 				if (!err && file) {
 					res.set('Content-Type', asset.file_mime);
@@ -480,7 +480,7 @@ Ctrl.prototype.createUser = function(req,res) {
 			var newUser = new User();
 			newUser.email = req.body.email;
 			newUser.permissions = req.body.permissions;
-			newUser.password = newUser.generateHash(req.body.password);	
+			newUser.password = newUser.generateHash(req.body.password);
 			newUser.save(function(err) {
                 if (err) {
                 	req.flash('createMessage', 'Unable to save a new user account at this time.');
@@ -497,7 +497,7 @@ Ctrl.prototype.updateUser = function(req,res) {
 		if (user) {
 			user.permissions = req.body.permissions;
 			if (req.body.password && req.body.password.length > 0) {
-				user.password = user.generateHash(req.body.password);	
+				user.password = user.generateHash(req.body.password);
 			}
 			user.save(function(err) {
                 if (err) {
@@ -548,7 +548,7 @@ Ctrl.prototype.getUsers = function(callback) {
 
 Ctrl.prototype.getUser = function(email,callback) {
 	User.findOne({email:email}, function(err, user) {
-		if (!err && user) { 
+		if (!err && user) {
 			callback(user);
 		} else {
 			callback(undefined);
@@ -576,7 +576,7 @@ Ctrl.prototype.importCSV = function(req,res,type) {
 			for (var i=0;i<output.length;i++) {
 				var row = output[i];
 				var newEntity;
-				if (type == "asset") { 
+				if (type == "asset") {
 					newEntity = new Asset();
 				} else if (type == "user") {
 					newEntity = new User();
@@ -619,7 +619,7 @@ Ctrl.prototype.importCSV = function(req,res,type) {
 							if (type == "user") {
 			        			err = "There is already an account associated with the email address "+val+".";
 			        		}
-			        		
+
 			        	}
 			        	errors.push(err);
 			        } else {
@@ -645,5 +645,3 @@ Ctrl.prototype.importCSV = function(req,res,type) {
 exports.Ctrl = Ctrl;
 exports.Asset = Asset;
 exports.User = User;
-
-
