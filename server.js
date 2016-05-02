@@ -280,6 +280,7 @@ app.get('/assets',function(req,res) {
 			});
 		})
 	} else {
+		console.log(localConfig.nginxLocation + "/assets")
 		req.session.redirectTo = localConfig.nginxLocation + "/assets";
 		res.redirect(localConfig.nginxLocation);
 	}
