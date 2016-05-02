@@ -196,7 +196,7 @@ app.get('/users',function(req,res) {
 			});
 		})
 	} else {
-		req.session.redirectTo = "users";
+		req.session.redirectTo = localConfig.nginxLocation + "users";
 		res.redirect(localConfig.nginxLocation);
 	}
 })
@@ -280,7 +280,7 @@ app.get('/assets',function(req,res) {
 			});
 		})
 	} else {
-		req.session.redirectTo = "assets";
+		req.session.redirectTo = localConfig.nginxLocation + "/assets";
 		res.redirect(localConfig.nginxLocation);
 	}
 })
